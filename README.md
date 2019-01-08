@@ -77,20 +77,20 @@ python src/main.py
 <img style="float: center;" src="sine_run_example.jpg">
 </p>
 
-Creating a SINE embedding of the default dataset with 128 dimensions.
+Creating a SINE embedding of the default dataset with 256 dimensions.
 
 ```
-python src/main.py --dimensions 128
+python src/main.py --dimensions 256
 ```
 
-Creating a SINE embedding of the default dataset with a high sampling budget.
+Creating a SINE embedding of the default dataset with a low sampling budget.
 
 ```
-python src/main.py --budget 10**8
+python src/main.py --budget 1000
 ```
 
 Creating an embedding of an other dense structured dataset the `Twitch Brasilians`. Saving the output in a custom folder.
 
 ```
-python src/main.py --edge-path input/ptbr_edges.csv --feature-path input/ptbr_features.csv --output-path output/ptbr_sine.csv
+python src/main.py --edge-path input/ptbr_edges.csv --feature-path input/ptbr_features.json --output-path output/ptbr_sine.csv
 ```
