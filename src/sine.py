@@ -7,8 +7,17 @@ from walkers import RandomWalker
 from utils import read_graph, read_features
 
 class SINELayer(torch.nn.Module):
-
+    """
+    Scalable Incomplete Network Embedding Layer.
+    For details see: https://arxiv.org/abs/1810.06768
+    """
     def __init__(self, args, shapes, device):
+        """
+        Initializing layer.
+        :param args: Arguments object.
+        :param shapes: Node number and feature number. 
+        :param device: CPU or CUDA placement. 
+        """
         super(SINELayer, self).__init__()
         self.args = args
         self.shapes = shapes
@@ -17,16 +26,28 @@ class SINELayer(torch.nn.Module):
         self.initialize_weights()
 
     def define_weights(self):
+        """
+        Defining the embeddings.
+        """
         self.node_embedding = torch.nn.Embedding(self.shapes[0], self.args.dimensions, padding_idx=0)
         self.node_noise_factors = torch.nn.Embedding(self.shapes[0], self.args.dimensions, padding_idx=0)
         self.feature_noise_factors = torch.nn.Embedding(self.shapes[1], self.args.dimensions, padding_idx=0)
 
     def initialize_weights(self):
+        """
+        Initializing the weights.
+        """
         torch.nn.init.xavier_normal_(self.node_embedding.weight.data)
         torch.nn.init.xavier_normal_(self.node_noise_factors.weight.data)
         torch.nn.init.xavier_normal_(self.feature_noise_factors.weight.data)
 
     def forward(self, source, target, score):
+        """
+        Forward propagation pass.
+        :param source: Source node.
+        :param target: Context nodes.
+        :param score: Random score to make decision whther feature or node is picked.
+        """
         source_node_vector = self.node_embedding(source)
         source_norm = torch.norm(source_node_vector, p=2, dim=1).view(-1,1)
         source_node_vector = source_node_vector/source_norm
@@ -42,7 +63,6 @@ class SINELayer(torch.nn.Module):
         hit = (torch.argmax(scores).item() == target.item())
         return prediction_loss, hit
         
-
 class SINETrainer(object):
     '''
     '''
@@ -143,5 +163,3 @@ class SINETrainer(object):
         self.embedding  = np.concatenate([np.array(range(self.embedding.shape[0])).reshape(-1,1),self.embedding],axis=1)
         self.embedding = pd.DataFrame(self.embedding, columns = embedding_header)
         self.embedding.to_csv(self.args.output_path, index = None)    
-
-
