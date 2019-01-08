@@ -29,9 +29,9 @@ class SINELayer(torch.nn.Module):
         """
         Defining the embeddings.
         """
-        self.node_embedding = torch.nn.Embedding(self.shapes[0], self.args.dimensions, padding_idx=0)
-        self.node_noise_factors = torch.nn.Embedding(self.shapes[0], self.args.dimensions, padding_idx=0)
-        self.feature_noise_factors = torch.nn.Embedding(self.shapes[1], self.args.dimensions, padding_idx=0)
+        self.node_embedding = torch.nn.Embedding(self.shapes[0], self.args.dimensions, padding_idx = 0)
+        self.node_noise_factors = torch.nn.Embedding(self.shapes[0], self.args.dimensions, padding_idx = 0)
+        self.feature_noise_factors = torch.nn.Embedding(self.shapes[1], self.args.dimensions, padding_idx = 0)
 
     def initialize_weights(self):
         """
