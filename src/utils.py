@@ -20,7 +20,7 @@ def read_features(feature_path):
     """
     Reading the feature matrix stored as JSON from the disk.
     :param feature_path: Path to the JSON file.
-    :return features: Feature sparse COO matrix.
+    :return features: Feature JSON for sampling.
     """
     features = json.load(open(feature_path))
     sample_features = {}
