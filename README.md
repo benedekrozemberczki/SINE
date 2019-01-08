@@ -45,15 +45,14 @@ Learning of the embedding is handled by the `src/main.py` script which provides 
 #### Input and output options
 
 ```
-  --edge-path    STR     Input graph path.           Default is `input/ptbr_edges.csv`.
-  --feature-path STR     Input Features path.        Default is `input/ptbr_features.json`.
-  --output-path  STR     Embedding path.             Default is `output/ptbr_bane.csv`.
+  --edge-path    STR     Input graph path.           Default is `input/chameleon_edges.csv`.
+  --feature-path STR     Input Features path.        Default is `input/chameleon_features.json`.
+  --output-path  STR     Embedding path.             Default is `output/chameleon_sine.csv`.
 ```
 
 #### Model options
 
 ```
-  --features               STR         Structure of the feature matrix.       Default is `sparse`. 
   --dimensions             INT         Number of embeding dimensions.         Default is 48.
   --order                  INT         Order of adjacency matrix powers.      Default is 1.
   --binarization-rounds    INT         Number of power interations.           Default is 10.
@@ -66,7 +65,7 @@ Learning of the embedding is handled by the `src/main.py` script which provides 
 
 The following commands learn a graph embedding and write the embedding to disk. The node representations are ordered by the ID.
 
-Creating a BANE embedding of the default dataset with the default hyperparameter settings. Saving the embedding at the default path.
+Creating a SINE embedding of the default dataset with the default hyperparameter settings. Saving the embedding at the default path.
 
 ```
 python src/main.py
