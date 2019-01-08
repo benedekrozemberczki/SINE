@@ -71,6 +71,10 @@ Creating a BANE embedding of the default dataset with the default hyperparameter
 ```
 python src/main.py
 ```
+<p align="center">
+<img style="float: center;" src="sine_run_example.jpg">
+</p>
+
 Creating a BANE embedding of the default dataset with 128 dimensions and approximation order 1.
 
 ```
