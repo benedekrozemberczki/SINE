@@ -2,6 +2,7 @@ import random
 import networkx as nx
 from tqdm import tqdm
 from tqdm import trange
+
 class RandomWalker:
     """
     Class to generate vertex sequences.
