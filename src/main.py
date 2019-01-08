@@ -4,7 +4,7 @@ from utils import read_graph, read_features, tab_printer
 
 def main():
     """
-    Parsing command lines, creating target matrix, fitting BANE and saving the embedding.
+    Parsing command lines, creating target matrix, fitting SINE and saving the embedding.
     """
     args = parameter_parser()
     tab_printer(args)
