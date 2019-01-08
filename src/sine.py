@@ -49,13 +49,13 @@ class SINELayer(torch.nn.Module):
         :param score: Random score to make decision whther feature or node is picked.
         """
         source_node_vector = self.node_embedding(source)
-        source_norm = torch.norm(source_node_vector, p=2, dim=1).view(-1,1)
+        source_norm = torch.norm(source_node_vector, p = 2, dim = 1).view(-1,1)
         source_node_vector = source_node_vector/source_norm
         if score > 0.5:
             target_matrix = self.node_noise_factors(target)
         else:
             target_matrix = self.feature_noise_factors(target)
-        target_norm = torch.norm(target_matrix, p=2, dim=1).view(-1,1)
+        target_norm = torch.norm(target_matrix, p = 2, dim = 1).view(-1,1)
         target_matrix = target_matrix/target_norm
         scores = torch.t(torch.nn.functional.softmax(torch.mm(target_matrix,torch.t(source_node_vector)), dim = 0))
         target = torch.tensor([0]).to(self.device)
