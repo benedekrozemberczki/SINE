@@ -65,8 +65,13 @@ class SINELayer(torch.nn.Module):
         
 class SINETrainer(object):
     '''
+    Class to train the Scalable Incomplete Network Embedding model.
     '''
     def __init__(self, args):
+        """
+        Initializing the training object.
+        :param args: Arguments parsed from command line.
+        """
         self.args = args
         self.graph = read_graph(self.args.edge_path)
         self.features = read_features(self.args.feature_path)
@@ -75,12 +80,18 @@ class SINETrainer(object):
         self.simulate_walks()
 
     def initialize_model(self):
+        """
+        Initializing the SINE model.
+        """
         self.node_count = len(self.graph.nodes())
         self.feature_index = len(self.features.keys())
         self.feature_count = max([max([val for val in v]) for k, v in self.features.items()])+1
         self.model = SINELayer(self.args, (self.node_count, self.feature_count), self.device).to(self.device)
 
     def simulate_walks(self):
+        """
+        Simulating truncated random walks.
+        """
         self.walker = RandomWalker(self.graph, self.args.number_of_walks, self.args.walk_length)
         self.walker.do_walks()
         
