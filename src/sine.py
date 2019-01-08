@@ -85,7 +85,7 @@ class SINETrainer(object):
         """
         self.node_count = len(self.graph.nodes())
         self.feature_index = len(self.features.keys())
-        self.feature_count = max([max([val for val in v]) for k, v in self.features.items()])+1
+        self.feature_count = max([max([val for val in v]) for k, v in self.features.items()]) + 1
         self.model = SINELayer(self.args, (self.node_count, self.feature_count), self.device).to(self.device)
 
     def simulate_walks(self):
@@ -97,6 +97,9 @@ class SINETrainer(object):
         
 
     def pick_a_node_pair(self):
+        """
+        Choosing a random node pair skip-gram style.
+        """
         walk_index = random.choice(range(self.node_count*self.args.number_of_walks))
         walk = self.walker.walks[walk_index]
         if random.uniform(0,1) >0.5:
@@ -110,11 +113,17 @@ class SINETrainer(object):
         return source, target
 
     def pick_a_node_feature_pair(self):
+        """
+        Choosing a random node-feature pair.
+        """
         index = random.choice(range(self.feature_index))
         source, target = self.features[index]
         return source, target
 
     def pick_noise_nodes(self):
+        """
+        Picking noise nodes based on node frequency distribution in walks. 
+        """
         noise_nodes = []
         for i in range(self.args.node_noise_samples):
             walk_index = random.choice(range(self.node_count*self.args.number_of_walks))
@@ -124,6 +133,9 @@ class SINETrainer(object):
         return noise_nodes          
 
     def pick_noise_features(self):
+        """
+        Picking noise feature based on feature frequency.
+        """
         noise_features = []
         for i in range(self.args.feature_noise_samples):
             index = random.choice(range(self.feature_index))
@@ -132,13 +144,26 @@ class SINETrainer(object):
         return noise_features
 
     def process_a_node(self, source_node, target, noise):
+        """
+        Given a node, target and noise samples create indexing tensors.
+        :param source_node: Source node.
+        :param target: Target node/feature index.
+        :param noise: Noise samples.
+        :return source: Source node tensor.
+        :return targets: Real and noise target indices.
+        """
         source = torch.LongTensor([source_node]).to(self.device)
         targets = torch.LongTensor([target] + noise).to(self.device)
         return source, targets
         
 
-    def update_loss(self, loss, step):
-        self.cummulative_accuracy = self.cummulative_accuracy + loss
+    def update_accuracy(self, hit, step):
+        """
+        Updating the cummulative predictive accuracy.
+        :param hit: Boolean describing correct prediction. 
+        :param step: Number of sampled processed.
+        """
+        self.cummulative_accuracy = self.cummulative_accuracy + hit
         self.budget.set_description("SINE (Accuracy=%g)" % round(self.cummulative_accuracy/(step+1),4))
 
     def fit(self):
@@ -159,14 +184,18 @@ class SINETrainer(object):
                 noise = self.pick_noise_features()
             source, targets = self.process_a_node(source_node, target, noise)
             loss, hit = self.model(source, targets, score)
-            self.update_loss(hit, step)
+            self.update_accuracy(hit, step)
             losses = losses + loss
             if (step + 1) %self.args.batch_size ==0:
                 losses.backward(retain_graph = True)
                 self.optimizer.step()
                 losses = 0
                 self.optimizer.zero_grad()
+
     def save_embedding(self):
+        """
+        Saving the node embedding.
+        """
         print("\n\nSaving the model.\n")
         nodes = torch.LongTensor([node for node in self.graph.nodes()]).to(self.device)
         self.embedding = self.model.node_embedding(nodes).cpu().detach().numpy()
