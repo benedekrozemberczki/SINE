@@ -53,12 +53,15 @@ Learning of the embedding is handled by the `src/main.py` script which provides 
 #### Model options
 
 ```
-  --dimensions             INT         Number of embeding dimensions.         Default is 48.
-  --order                  INT         Order of adjacency matrix powers.      Default is 1.
-  --binarization-rounds    INT         Number of power interations.           Default is 10.
-  --approximation-rounds   INT         Number of CDC interations.             Default is 5.
-  --alpha                  FLOAT       Regularization parameter.              Default is 0.7.
-  --gamma                  FLOAT       Weisfeiler-Lehman mixing parameter.    Default is 0.1.  
+  --dimensions              INT       Number of embeding dimensions.         Default is 128.
+  --budget                  INT       Sampling budget.                       Default is 10^5.
+  --node-noise-samples      INT       Number of noise sampled nodes.         Default is 5.
+  --feature-noise-samples   INT       Number of noise sampled features.      Default is 5.
+  --batch-size              INT       Number of source nodes per batch.      Default is 32.
+  --walk-length             INT       Truncated random walk length.          Default is 80.  
+  --number-of-walks         INT       Number of walks per source node.       Default is 10.
+  --window-size             INT       Skip-gram window size.                 Default is 5.
+  --learning-rate           FLOAT     Learning rate value.                   Default is 0.001.
 ```
 
 ### Examples
@@ -74,20 +77,20 @@ python src/main.py
 <img style="float: center;" src="sine_run_example.jpg">
 </p>
 
-Creating a BANE embedding of the default dataset with 128 dimensions and approximation order 1.
+Creating a SINE embedding of the default dataset with 128 dimensions.
 
 ```
-python src/main.py --dimensions 128 --order 1
+python src/main.py --dimensions 128
 ```
 
-Creating a BANE embedding of the default dataset with asymmetric mixing.
+Creating a SINE embedding of the default dataset with a high sampling budget.
 
 ```
-python src/main.py --gamma 0.1
+python src/main.py --budget 10**8
 ```
 
-Creating an embedding of an other dense structured dataset the `Wikipedia Giraffes`. Saving the output in a custom folder.
+Creating an embedding of an other dense structured dataset the `Twitch Brasilians`. Saving the output in a custom folder.
 
 ```
-python src/main.py --edge-path input/giraffe_edges.csv --feature-path input/giraffe_features.csv --output-path output/giraffe_bane.csv --features dense
+python src/main.py --edge-path input/ptbr_edges.csv --feature-path input/ptbr_features.csv --output-path output/ptbr_sine.csv
 ```
