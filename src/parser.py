@@ -28,27 +28,27 @@ def parameter_parser():
     parser.add_argument("--dimensions",
                         type = int,
                         default = 128,
-	                help = "Number of SVD factors. Default is 48.")
+	                help = "Number of dimensions. Default is 128.")
 
     parser.add_argument("--budget",
                         type = int,
                         default = 10**5,
-	                help = "Number of power iterations. Default is 10.")
+	                help = "Number of samples generated. Default is 10**5.")
 
     parser.add_argument("--node-noise-samples",
                         type = int,
                         default = 5,
-	                help = "Number of CDC rounds. Default is 5.")
+	                help = "Number of node negative samples. Default is 5.")
 
     parser.add_argument("--feature-noise-samples",
                         type = int,
                         default = 5,
-	                help = "Number of CDC rounds. Default is 5.")
+	                help = "Number of feature negative samples. Default is 5.")
 
     parser.add_argument("--batch-size",
                         type = int,
                         default = 32,
-	                help = "Number of CDC rounds. Default is 5.")
+	                help = "Mini-batch sample number. Default is 32.")
 
     parser.add_argument("--walk-length",
                         type = int,
@@ -68,6 +68,6 @@ def parameter_parser():
     parser.add_argument("--learning-rate",
                         type = float,
                         default = 0.001,
-	                help = "Trade-off parameter. Default is 0.7.")
+	                help = "Adam learning rate. Default is 0.001.")
     
     return parser.parse_args()
