@@ -95,7 +95,6 @@ class SINETrainer(object):
         self.walker = RandomWalker(self.graph, self.args.number_of_walks, self.args.walk_length)
         self.walker.do_walks()
         
-
     def pick_a_node_pair(self):
         """
         Choosing a random node pair skip-gram style.
