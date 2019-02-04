@@ -156,7 +156,6 @@ class SINETrainer(object):
         targets = torch.LongTensor([target] + noise).to(self.device)
         return source, targets
         
-
     def update_accuracy(self, hit, step):
         """
         Updating the cummulative predictive accuracy.
