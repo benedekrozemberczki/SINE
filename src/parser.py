@@ -32,7 +32,7 @@ def parameter_parser():
 
     parser.add_argument("--budget",
                         type = int,
-                        default = 2*10**5,
+                        default = 10**5,
 	                help = "Number of samples generated. Default is 10**5.")
 
     parser.add_argument("--node-noise-samples",
