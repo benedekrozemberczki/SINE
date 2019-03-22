@@ -53,7 +53,9 @@ class SINELayer(torch.nn.Module):
             target_matrix = self.node_noise_factors(target)
         else:
             target_matrix = self.feature_noise_factors(target)
-        scores = torch.t(torch.nn.functional.log_softmax(torch.mm(target_matrix,torch.t(source_node_vector)), dim = 0))
+        scores = torch.mm(target_matrix,torch.t(source_node_vector))
+        scores = torch.clamp(scores,-20,20)
+        scores = torch.t(torch.nn.functional.log_softmax(scores, dim = 0))
         target = torch.tensor([0]).to(self.device)
         prediction_loss = torch.nn.functional.nll_loss(scores, target)
         hit = (torch.argmax(scores).item() == target.item())

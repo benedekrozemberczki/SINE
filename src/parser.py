@@ -12,12 +12,12 @@ def parameter_parser():
 
     parser.add_argument("--edge-path",
                         nargs = "?",
-                        default = "./input/chameleon_edges.csv",
+                        default = "./input/edges/chameleon.csv",
 	                help = "Edge list csv.")
 
     parser.add_argument("--feature-path",
                         nargs = "?",
-                        default = "./input/chameleon_features.json",
+                        default = "./input/features/chameleon.json",
 	                help = "Node features csv.")
 
     parser.add_argument("--output-path",
@@ -32,7 +32,7 @@ def parameter_parser():
 
     parser.add_argument("--budget",
                         type = int,
-                        default = 10**5,
+                        default = 2*10**5,
 	                help = "Number of samples generated. Default is 10**5.")
 
     parser.add_argument("--node-noise-samples",
@@ -67,7 +67,7 @@ def parameter_parser():
 
     parser.add_argument("--learning-rate",
                         type = float,
-                        default = 0.001,
+                        default = 0.01,
 	                help = "Adam learning rate. Default is 0.001.")
     
     return parser.parse_args()
