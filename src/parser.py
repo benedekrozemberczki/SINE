@@ -68,6 +68,6 @@ def parameter_parser():
     parser.add_argument("--learning-rate",
                         type = float,
                         default = 0.01,
-	                help = "Adam learning rate. Default is 0.001.")
+	                help = "Adam learning rate. Default is 0.01.")
     
     return parser.parse_args()
