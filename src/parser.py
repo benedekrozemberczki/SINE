@@ -12,12 +12,12 @@ def parameter_parser():
 
     parser.add_argument("--edge-path",
                         nargs = "?",
-                        default = "./input/edges/chameleon.csv",
+                        default = "./input/chameleon_edges.csv",
 	                help = "Edge list csv.")
 
     parser.add_argument("--feature-path",
                         nargs = "?",
-                        default = "./input/features/chameleon.json",
+                        default = "./input/chameleon_features.json",
 	                help = "Node features csv.")
 
     parser.add_argument("--output-path",
