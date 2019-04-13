@@ -12,17 +12,17 @@ def parameter_parser():
 
     parser.add_argument("--edge-path",
                         nargs = "?",
-                        default = "./input/cora_edges.csv",
+                        default = "./input/chameleon_edges.csv",
 	                help = "Edge list csv.")
 
     parser.add_argument("--feature-path",
                         nargs = "?",
-                        default = "./input/cora_features.json",
+                        default = "./input/chameleon_features.json",
 	                help = "Node features csv.")
 
     parser.add_argument("--output-path",
                         nargs = "?",
-                        default = "./output/cora_sine.csv",
+                        default = "./output/chameleon_sine.csv",
 	                help = "Target embedding csv.")
 
     parser.add_argument("--dimensions",
@@ -35,19 +35,14 @@ def parameter_parser():
                         default = 10**5,
 	                help = "Number of samples generated. Default is 10**5.")
 
-    parser.add_argument("--node-noise-samples",
+    parser.add_argument("--noise-samples",
                         type = int,
                         default = 5,
 	                help = "Number of node negative samples. Default is 5.")
 
-    parser.add_argument("--feature-noise-samples",
-                        type = int,
-                        default = 5,
-	                help = "Number of feature negative samples. Default is 5.")
-
     parser.add_argument("--batch-size",
                         type = int,
-                        default = 320,
+                        default = 32,
 	                help = "Mini-batch sample number. Default is 32.")
 
     parser.add_argument("--walk-length",

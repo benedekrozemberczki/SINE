@@ -49,15 +49,16 @@ class SINELayer(torch.nn.Module):
         :param score: Random score to make decision whther feature or node is picked.
         """
         source_node_vector = self.node_embedding(source)
-        if score > 0.0:
+        if score > 0.5:
             target_matrix = self.node_noise_factors(target)
         else:
             target_matrix = self.feature_noise_factors(target)
         scores = target_matrix*source_node_vector
         scores = torch.sum(scores,dim=1)
+        scores = torch.clamp(scores,-20,20)
         scores = torch.sigmoid(scores)
-        targets = torch.FloatTensor([1.0]+[0.0 for i in range(self.args.node_noise_samples)]).to(self.device)
-        main_loss = targets*torch.log(scores) + (1.0-targets)*torch.log(1-scores)
+        targets = torch.FloatTensor([1.0]+[0.0 for i in range(self.args.noise_samples)]).to(self.device)
+        main_loss = targets*torch.log(scores) + (1.0-targets)*torch.log(1.0-scores)
         main_loss = -torch.mean(main_loss)
         return main_loss
         
@@ -99,7 +100,7 @@ class SINETrainer(object):
         """
         walk_index = random.choice(range(self.node_count*self.args.number_of_walks))
         walk = self.walker.walks[walk_index]
-        if random.uniform(0,1) > 0.5:
+        if random.uniform(0,1) >0.5:
             node_index = random.choice(range(self.args.walk_length-self.args.window_size))
             modifier = random.choice(range(1,self.args.window_size+1))
         else:
@@ -122,7 +123,7 @@ class SINETrainer(object):
         Picking noise nodes based on node frequency distribution in walks. 
         """
         noise_nodes = []
-        for i in range(self.args.node_noise_samples):
+        for i in range(self.args.noise_samples):
             walk_index = random.choice(range(self.node_count*self.args.number_of_walks))
             walk = self.walker.walks[walk_index]
             node_index = random.choice(range(self.args.walk_length))
@@ -134,7 +135,7 @@ class SINETrainer(object):
         Picking noise feature based on feature frequency.
         """
         noise_features = []
-        for i in range(self.args.feature_noise_samples):
+        for i in range(self.args.noise_samples):
             index = random.choice(range(self.feature_index))
             source, target = self.features[index]
             noise_features.append(target)
@@ -160,7 +161,7 @@ class SINETrainer(object):
         :param step: Number of sampled processed.
         """
         self.cummulative_accuracy = self.cummulative_accuracy + loss.item()
-        self.budget.set_description("SINE (Accuracy=%g)" % round(self.cummulative_accuracy/(step+1),4))
+        self.budget.set_description("SINE (Loss=%g)" % round(self.cummulative_accuracy/(step+1),4))
 
     def fit(self):
         print("\n\nTraining the model.\n")
@@ -172,7 +173,7 @@ class SINETrainer(object):
         losses = 0
         for step in self.budget:
             score = random.uniform(0,1)
-            if score > 0.0:
+            if score > 0.5:
                 source_node, target = self.pick_a_node_pair()
                 noise = self.pick_noise_nodes()
             else:
@@ -183,8 +184,7 @@ class SINETrainer(object):
             losses = losses + loss
             self.update_accuracy(loss, step)
             if (step + 1) %self.args.batch_size ==0:
-                losses = losses / self.args.batch_size
-                losses.backward()
+                losses.backward(retain_graph = True)
                 self.optimizer.step()
                 losses = 0
                 self.optimizer.zero_grad()
@@ -197,7 +197,6 @@ class SINETrainer(object):
         nodes = [node for node in range(self.model.shapes[0])]
         nodes = torch.LongTensor(nodes).to(self.device)
         self.embedding = self.model.node_embedding(nodes).cpu().detach().numpy()
-
         embedding_header = ["id"] + ["x_" + str(x) for x in range(self.args.dimensions)]
         self.embedding  = np.concatenate([np.array(range(self.embedding.shape[0])).reshape(-1,1),self.embedding],axis=1)
         self.embedding = pd.DataFrame(self.embedding, columns = embedding_header)
