@@ -55,7 +55,6 @@ class SINELayer(torch.nn.Module):
             target_matrix = self.feature_noise_factors(target)
         scores = target_matrix*source_node_vector
         scores = torch.sum(scores,dim=1)
-
         scores = torch.sigmoid(scores)
         targets = torch.FloatTensor([1.0]+[0.0 for i in range(self.args.node_noise_samples)]).to(self.device)
         main_loss = targets*torch.log(scores) + (1.0-targets)*torch.log(1-scores)
