@@ -57,8 +57,7 @@ Learning of the embedding is handled by the `src/main.py` script which provides 
 ```
   --dimensions              INT       Number of embeding dimensions.         Default is 128.
   --budget                  INT       Sampling budget.                       Default is 10^5.
-  --node-noise-samples      INT       Number of noise sampled nodes.         Default is 5.
-  --feature-noise-samples   INT       Number of noise sampled features.      Default is 5.
+  --noise-samples           INT       Number of noise samples.               Default is 5.
   --batch-size              INT       Number of source nodes per batch.      Default is 32.
   --walk-length             INT       Truncated random walk length.          Default is 80.  
   --number-of-walks         INT       Number of walks per source node.       Default is 10.
