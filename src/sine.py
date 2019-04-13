@@ -49,17 +49,18 @@ class SINELayer(torch.nn.Module):
         :param score: Random score to make decision whther feature or node is picked.
         """
         source_node_vector = self.node_embedding(source)
-        if score > 0.5:
+        if score > 0.0:
             target_matrix = self.node_noise_factors(target)
         else:
             target_matrix = self.feature_noise_factors(target)
-        scores = torch.mm(target_matrix,torch.t(source_node_vector))
-        scores = torch.clamp(scores,-20,20)
-        scores = torch.t(torch.nn.functional.log_softmax(scores, dim = 0))
-        target = torch.tensor([0]).to(self.device)
-        prediction_loss = torch.nn.functional.nll_loss(scores, target)
-        hit = (torch.argmax(scores).item() == target.item())
-        return prediction_loss, hit
+        scores = target_matrix*source_node_vector
+        scores = torch.sum(scores,dim=1)
+
+        scores = torch.sigmoid(scores)
+        targets = torch.FloatTensor([1.0]+[0.0 for i in range(self.args.node_noise_samples)]).to(self.device)
+        main_loss = targets*torch.log(scores) + (1.0-targets)*torch.log(1-scores)
+        main_loss = -torch.mean(main_loss)
+        return main_loss
         
 class SINETrainer(object):
     '''
@@ -99,7 +100,7 @@ class SINETrainer(object):
         """
         walk_index = random.choice(range(self.node_count*self.args.number_of_walks))
         walk = self.walker.walks[walk_index]
-        if random.uniform(0,1) >0.5:
+        if random.uniform(0,1) > 0.5:
             node_index = random.choice(range(self.args.walk_length-self.args.window_size))
             modifier = random.choice(range(1,self.args.window_size+1))
         else:
@@ -153,13 +154,13 @@ class SINETrainer(object):
         targets = torch.LongTensor([target] + noise).to(self.device)
         return source, targets
         
-    def update_accuracy(self, hit, step):
+    def update_accuracy(self, loss, step):
         """
         Updating the cummulative predictive accuracy.
         :param hit: Boolean describing correct prediction. 
         :param step: Number of sampled processed.
         """
-        self.cummulative_accuracy = self.cummulative_accuracy + hit
+        self.cummulative_accuracy = self.cummulative_accuracy + loss.item()
         self.budget.set_description("SINE (Accuracy=%g)" % round(self.cummulative_accuracy/(step+1),4))
 
     def fit(self):
@@ -172,18 +173,19 @@ class SINETrainer(object):
         losses = 0
         for step in self.budget:
             score = random.uniform(0,1)
-            if score > 0.5:
+            if score > 0.0:
                 source_node, target = self.pick_a_node_pair()
                 noise = self.pick_noise_nodes()
             else:
                 source_node, target = self.pick_a_node_feature_pair()
                 noise = self.pick_noise_features()
             source, targets = self.process_a_node(source_node, target, noise)
-            loss, hit = self.model(source, targets, score)
-            self.update_accuracy(hit, step)
+            loss = self.model(source, targets, score)
             losses = losses + loss
+            self.update_accuracy(loss, step)
             if (step + 1) %self.args.batch_size ==0:
-                losses.backward(retain_graph = True)
+                losses = losses / self.args.batch_size
+                losses.backward()
                 self.optimizer.step()
                 losses = 0
                 self.optimizer.zero_grad()
@@ -193,8 +195,10 @@ class SINETrainer(object):
         Saving the node embedding.
         """
         print("\n\nSaving the model.\n")
-        nodes = torch.LongTensor([node for node in self.graph.nodes()]).to(self.device)
+        nodes = [node for node in range(self.model.shapes[0])]
+        nodes = torch.LongTensor(nodes).to(self.device)
         self.embedding = self.model.node_embedding(nodes).cpu().detach().numpy()
+
         embedding_header = ["id"] + ["x_" + str(x) for x in range(self.args.dimensions)]
         self.embedding  = np.concatenate([np.array(range(self.embedding.shape[0])).reshape(-1,1),self.embedding],axis=1)
         self.embedding = pd.DataFrame(self.embedding, columns = embedding_header)
