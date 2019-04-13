@@ -38,7 +38,7 @@ def parameter_parser():
     parser.add_argument("--noise-samples",
                         type = int,
                         default = 5,
-	                help = "Number of node negative samples. Default is 5.")
+	                help = "Number of negative samples. Default is 5.")
 
     parser.add_argument("--batch-size",
                         type = int,
