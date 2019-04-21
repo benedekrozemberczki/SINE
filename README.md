@@ -13,7 +13,6 @@ This repository provides an implementation of SINE as described in the paper:
 > [[Paper]](https://arxiv.org/pdf/1810.06768.pdf)
 
 ### Requirements
-
 The codebase is implemented in Python 3.5.2. package versions used for development are just below.
 ```
 networkx          1.11
