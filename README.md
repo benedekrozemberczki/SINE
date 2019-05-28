@@ -1,4 +1,6 @@
-SINE
+Scalable Incomplete Network Embedding 
+	<img src="https://img.shields.io/badge/stars-10+-blue.svg"/>
+	<img src="https://img.shields.io/badge/license-CC0-blue.svg"/>
 ============================================
 A PyTorch  implementation of "Scalable Incomplete Network Embedding" (ICDM 2018).
 <div style="text-align:center"><img src ="sine.jpg" ,width=720/></div>
