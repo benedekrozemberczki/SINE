@@ -14,6 +14,8 @@ This repository provides an implementation of SINE as described in the paper:
 > ICDM, 2018.
 > [[Paper]](https://arxiv.org/pdf/1810.06768.pdf)
 
+The original C implementation is available [[here]](https://github.com/daokunzhang/SINE).
+
 ### Requirements
 The codebase is implemented in Python 3.5.2. package versions used for development are just below.
 ```
