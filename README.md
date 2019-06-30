@@ -1,6 +1,5 @@
 Scalable Incomplete Network Embedding 
-	<img src="https://img.shields.io/badge/stars-20+-blue.svg"/>
-	<img src="https://img.shields.io/badge/license-MIT-blue.svg"/>
+![GitHub stars](https://img.shields.io/github/stars/benedekrozemberczki/SINE.svg?style=plastic) ![GitHub forks](https://img.shields.io/github/forks/benedekrozemberczki/SINE.svg?color=blue&style=plastic) ![License](https://img.shields.io/github/license/benedekrozemberczki/SINE.svg?color=blue&style=plastic)
 ============================================
 A PyTorch  implementation of "Scalable Incomplete Network Embedding" (ICDM 2018).
 <div style="text-align:center"><img src ="sine.jpg" ,width=720/></div>
