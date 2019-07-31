@@ -1,5 +1,0 @@
-A PyTorch implementation of "SINE: Scalable Incomplete Network Embedding" (ICDM 2018). The procedure learns an attributed node embedding using skip-gram like features with a shallow deep model. It is a fairly useful feature extraction tool when you need high accuracy node classification, vertex level regression or link prediction.
-
-https://github.com/benedekrozemberczki/SINE
-
-#datamining #machinelearning #technology #deeplearning #datascience #bigdata
