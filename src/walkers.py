@@ -25,7 +25,7 @@ class RandomWalker:
         :return walk: Truncated random walk with fixed maximal length.
         """
         walk = [start_node]
-        while len(walk) < self.args.walk_length:
+        while len(walk) < self.length:
             if len(nx.neighbors(self.graph,walk[-1])) == 0:
                 break
             walk = walk + [random.sample(nx.neighbors(self.graph,walk[-1]),1)[0]]
