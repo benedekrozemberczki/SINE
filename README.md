@@ -31,10 +31,10 @@ torch             1.0.0.
 torchvision       0.2.1
 ```
 ### Datasets
-
-The code takes an input graph in a csv file. Every row indicates an edge between two nodes separated by a comma. The first row is a header. Nodes should be indexed starting with 0. Sample graphs for the `Twitch Brasilians` and `Wikipedia Chameleons` are included in the  `input/` directory. 
-
-The feature matrix can be stored two ways as a **sparse binary** one. For simplicity, it is a JSON. Nodes are keys of the json and features are the values. For each node feature column ids are stored as elements of a list. The feature matrix is structured as:
+<p align="justify">
+The code takes an input graph in a csv file. Every row indicates an edge between two nodes separated by a comma. The first row is a header. Nodes should be indexed starting with 0. Sample graphs for the `Twitch Brasilians` and `Wikipedia Chameleons` are included in the  `input/` directory. </p>
+<p align="justify">
+The feature matrix can be stored two ways as a **sparse binary** one. For simplicity, it is a JSON. Nodes are keys of the json and features are the values. For each node feature column ids are stored as elements of a list. The feature matrix is structured as:</p>
 
 ```javascript
 { 0: [0, 1, 38, 1968, 2000, 52727],
@@ -45,8 +45,8 @@ The feature matrix can be stored two ways as a **sparse binary** one. For simpli
 ```
 
 ### Options
-
-Learning of the embedding is handled by the `src/main.py` script which provides the following command line arguments.
+<p align="justify">
+Learning of the embedding is handled by the `src/main.py` script which provides the following command line arguments.</p>
 
 #### Input and output options
 
@@ -70,10 +70,10 @@ Learning of the embedding is handled by the `src/main.py` script which provides 
 ```
 
 ### Examples
-
-The following commands learn a graph embedding and write the embedding to disk. The node representations are ordered by the ID.
-
-Creating a SINE embedding of the default dataset with the default hyperparameter settings. Saving the embedding at the default path.
+<p align="justify">
+The following commands learn a graph embedding and write the embedding to disk. The node representations are ordered by the ID.</p>
+<p align="justify">
+Creating a SINE embedding of the default dataset with the default hyperparameter settings. Saving the embedding at the default path.</p>
 
 ```
 python src/main.py
@@ -83,19 +83,14 @@ python src/main.py
 </p>
 
 Creating a SINE embedding of the default dataset with 256 dimensions.
-
 ```
 python src/main.py --dimensions 256
 ```
-
 Creating a SINE embedding of the default dataset with a low sampling budget.
-
 ```
 python src/main.py --budget 1000
 ```
-
 Creating an embedding of an other dense structured dataset the `Twitch Brasilians`. Saving the output in a custom folder.
-
 ```
 python src/main.py --edge-path input/ptbr_edges.csv --feature-path input/ptbr_features.json --output-path output/ptbr_sine.csv
 ```
