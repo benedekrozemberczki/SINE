@@ -1,10 +1,13 @@
+"""Running SINE."""
+
 from sine import SINETrainer
-from parser import parameter_parser
+from param_parser import parameter_parser
 from utils import read_graph, read_features, tab_printer
 
 def main():
     """
-    Parsing command lines, creating target matrix, fitting SINE and saving the embedding.
+    Parsing command lines, creating target matrix.
+    Fitting SINE and saving the embedding.
     """
     args = parameter_parser()
     tab_printer(args)

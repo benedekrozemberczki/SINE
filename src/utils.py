@@ -1,13 +1,13 @@
+"""Data reading utils."""
+
 import json
-import numpy as np
 import pandas as pd
 import networkx as nx
-from scipy import sparse
 from texttable import Texttable
 
 def read_graph(graph_path):
     """
-    Method to read graph and create a target matrix with pooled adjacency matrix powers up to the order.
+    Method to read graph and create a target matrix adjacency matrix powers.
     :param args: Arguments object.
     :return graph: graph.
     """
@@ -24,9 +24,9 @@ def read_features(feature_path):
     features = json.load(open(feature_path))
     sample_features = {}
     index = 0
-    for k,v in features.items():
+    for k, v in features.items():
         for val in v:
-            sample_features[index] = (int(k),int(val))
+            sample_features[index] = (int(k), int(val))
             index = index + 1
     return sample_features
 
@@ -37,6 +37,7 @@ def tab_printer(args):
     """
     args = vars(args)
     keys = sorted(args.keys())
-    t = Texttable() 
-    t.add_rows([["Parameter", "Value"]] +  [[k.replace("_"," ").capitalize(),args[k]] for k in keys])
+    t = Texttable()
+    t.add_rows([["Parameter", "Value"]])
+    t.add_rows([[k.replace("_", " ").capitalize(), args[k]] for k in keys])
     print(t.draw())
