@@ -1,3 +1,5 @@
+"""Random Walker class."""
+
 import random
 import networkx as nx
 from tqdm import tqdm
@@ -15,9 +17,9 @@ class RandomWalker:
         """
         print("Model initialization started.")
         self.graph = graph
-        self.repetitions = repetitions 
+        self.repetitions = repetitions
         self.length = length
-        
+
     def small_walk(self, start_node):
         """
         Doing a truncated random walk.
@@ -26,18 +28,19 @@ class RandomWalker:
         """
         walk = [start_node]
         while len(walk) < self.length:
-            if len(nx.neighbors(self.graph,walk[-1])) == 0:
+            nebs = [n for n in nx.neighbors(self.graph, walk[-1])]
+            if len(nebs) == 0:
                 break
-            walk = walk + [random.sample(nx.neighbors(self.graph,walk[-1]),1)[0]]
+            walk.append(random.choice(nebs))
         return walk
-       
+
     def do_walks(self):
         """
         Do a series of random walks.
         """
         print("\nRandom walks started.\n")
         self.walks = []
-        for rep in trange(self.repetitions, desc = "Series: "):
+        for _ in trange(self.repetitions, desc="Series: "):
             for node in tqdm(self.graph.nodes(), desc="Nodes: "):
                 walk = self.small_walk(node)
                 self.walks.append(walk)
