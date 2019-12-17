@@ -1,8 +1,10 @@
-import torch
+"""SINE model."""
+
 import random
+import torch
 import numpy as np
 import pandas as pd
-from tqdm import tqdm, trange
+from tqdm import trange
 from walkers import RandomWalker
 from utils import read_graph, read_features
 
@@ -15,8 +17,8 @@ class SINELayer(torch.nn.Module):
         """
         Initializing layer.
         :param args: Arguments object.
-        :param shapes: Node number and feature number. 
-        :param device: CPU or CUDA placement. 
+        :param shapes: Node number and feature number.
+        :param device: CPU or CUDA placement.
         """
         super(SINELayer, self).__init__()
         self.args = args
@@ -29,9 +31,17 @@ class SINELayer(torch.nn.Module):
         """
         Defining the embeddings.
         """
-        self.node_embedding = torch.nn.Embedding(self.shapes[0], self.args.dimensions, padding_idx = 0)
-        self.node_noise_factors = torch.nn.Embedding(self.shapes[0], self.args.dimensions, padding_idx = 0)
-        self.feature_noise_factors = torch.nn.Embedding(self.shapes[1], self.args.dimensions, padding_idx = 0)
+        self.node_embedding = torch.nn.Embedding(self.shapes[0],
+                                                 self.args.dimensions,
+                                                 padding_idx=0)
+
+        self.node_noise_factors = torch.nn.Embedding(self.shapes[0],
+                                                     self.args.dimensions,
+                                                     padding_idx=0)
+
+        self.feature_noise_factors = torch.nn.Embedding(self.shapes[1],
+                                                        self.args.dimensions,
+                                                        padding_idx=0)
 
     def initialize_weights(self):
         """
@@ -54,14 +64,15 @@ class SINELayer(torch.nn.Module):
         else:
             target_matrix = self.feature_noise_factors(target)
         scores = target_matrix*source_node_vector
-        scores = torch.sum(scores,dim=1)
-        scores = torch.clamp(scores,-20,20)
+        scores = torch.sum(scores, dim=1)
+        scores = torch.clamp(scores, -20, 20)
         scores = torch.sigmoid(scores)
-        targets = torch.FloatTensor([1.0]+[0.0 for i in range(self.args.noise_samples)]).to(self.device)
-        main_loss = targets*torch.log(scores) + (1.0-targets)*torch.log(1.0-scores)
+        targets = [1.0]+[0.0 for i in range(self.args.noise_samples)]
+        targets = torch.FloatTensor(targets).to(self.device)
+        main_loss = targets*torch.log(scores)+(1.0-targets)*torch.log(1.0-scores)
         main_loss = -torch.mean(main_loss)
         return main_loss
-        
+
 class SINETrainer(object):
     '''
     Class to train the Scalable Incomplete Network Embedding model.
@@ -84,8 +95,10 @@ class SINETrainer(object):
         """
         self.node_count = len(self.graph.nodes())
         self.feature_index = len(self.features.keys())
-        self.feature_count = max([max([val for val in v]) for k, v in self.features.items()]) + 1
-        self.model = SINELayer(self.args, (self.node_count, self.feature_count), self.device).to(self.device)
+        self.feature_count = [max([val for val in v]) for k, v in self.features.items()]
+        self.feature_count = max(self.feature_count) + 1
+        shape = (self.node_count, self.feature_count)
+        self.model = SINELayer(self.args, shape, self.device).to(self.device)
 
     def simulate_walks(self):
         """
@@ -93,19 +106,19 @@ class SINETrainer(object):
         """
         self.walker = RandomWalker(self.graph, self.args.number_of_walks, self.args.walk_length)
         self.walker.do_walks()
-        
+
     def pick_a_node_pair(self):
         """
         Choosing a random node pair skip-gram style.
         """
         walk_index = random.choice(range(self.node_count*self.args.number_of_walks))
         walk = self.walker.walks[walk_index]
-        if random.uniform(0,1) >0.5:
+        if random.uniform(0, 1) > 0.5:
             node_index = random.choice(range(self.args.walk_length-self.args.window_size))
-            modifier = random.choice(range(1,self.args.window_size+1))
+            modifier = random.choice(range(1, self.args.window_size+1))
         else:
-            node_index = random.choice(range(self.args.window_size,self.args.walk_length))
-            modifier = random.choice(range(-self.args.window_size,0))
+            node_index = random.choice(range(self.args.window_size, self.args.walk_length))
+            modifier = random.choice(range(-self.args.window_size, 0))
         source = walk[node_index]
         target = walk[node_index+modifier]
         return source, target
@@ -120,22 +133,22 @@ class SINETrainer(object):
 
     def pick_noise_nodes(self):
         """
-        Picking noise nodes based on node frequency distribution in walks. 
+        Picking noise nodes based on node frequency distribution in walks.
         """
         noise_nodes = []
-        for i in range(self.args.noise_samples):
+        for _ in range(self.args.noise_samples):
             walk_index = random.choice(range(self.node_count*self.args.number_of_walks))
             walk = self.walker.walks[walk_index]
             node_index = random.choice(range(self.args.walk_length))
             noise_nodes.append(walk[node_index])
-        return noise_nodes          
+        return noise_nodes
 
     def pick_noise_features(self):
         """
         Picking noise feature based on feature frequency.
         """
         noise_features = []
-        for i in range(self.args.noise_samples):
+        for _ in range(self.args.noise_samples):
             index = random.choice(range(self.feature_index))
             source, target = self.features[index]
             noise_features.append(target)
@@ -153,17 +166,20 @@ class SINETrainer(object):
         source = torch.LongTensor([source_node]).to(self.device)
         targets = torch.LongTensor([target] + noise).to(self.device)
         return source, targets
-        
+
     def update_accuracy(self, loss, step):
         """
         Updating the cummulative predictive accuracy.
-        :param hit: Boolean describing correct prediction. 
+        :param hit: Boolean describing correct prediction.
         :param step: Number of sampled processed.
         """
         self.cummulative_accuracy = self.cummulative_accuracy + loss.item()
-        self.budget.set_description("SINE (Loss=%g)" % round(self.cummulative_accuracy/(step+1),4))
+        self.budget.set_description("SINE (Loss=%g)" % round(self.cummulative_accuracy/(step+1), 4))
 
     def fit(self):
+        """
+        Model training.
+        """
         print("\n\nTraining the model.\n")
         self.model.train()
         self.optimizer = torch.optim.Adam(self.model.parameters(), lr=self.args.learning_rate)
@@ -172,7 +188,7 @@ class SINETrainer(object):
         self.budget = trange(self.args.budget, desc="Samples: ")
         losses = 0
         for step in self.budget:
-            score = random.uniform(0,1)
+            score = random.uniform(0, 1)
             if score > 0.5:
                 source_node, target = self.pick_a_node_pair()
                 noise = self.pick_noise_nodes()
@@ -183,8 +199,8 @@ class SINETrainer(object):
             loss = self.model(source, targets, score)
             losses = losses + loss
             self.update_accuracy(loss, step)
-            if (step + 1) %self.args.batch_size ==0:
-                losses.backward(retain_graph = True)
+            if (step+1) % self.args.batch_size == 0:
+                losses.backward(retain_graph=True)
                 self.optimizer.step()
                 losses = 0
                 self.optimizer.zero_grad()
@@ -196,8 +212,9 @@ class SINETrainer(object):
         print("\n\nSaving the model.\n")
         nodes = [node for node in range(self.model.shapes[0])]
         nodes = torch.LongTensor(nodes).to(self.device)
-        self.embedding = self.model.node_embedding(nodes).cpu().detach().numpy()
-        embedding_header = ["id"] + ["x_" + str(x) for x in range(self.args.dimensions)]
-        self.embedding  = np.concatenate([np.array(range(self.embedding.shape[0])).reshape(-1,1),self.embedding],axis=1)
-        self.embedding = pd.DataFrame(self.embedding, columns = embedding_header)
-        self.embedding.to_csv(self.args.output_path, index = None)    
+        embedding = self.model.node_embedding(nodes).cpu().detach().numpy()
+        cols = ["id"] + ["x_" + str(x) for x in range(self.args.dimensions)]
+        embedding = [np.array(range(embedding.shape[0])).reshape(-1, 1), embedding]
+        embedding = np.concatenate(embedding, axis=1)
+        embedding = pd.DataFrame(embedding, columns=cols)
+        embedding.to_csv(self.args.output_path, index=None)
