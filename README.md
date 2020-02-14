@@ -1,6 +1,4 @@
-
 Scalable Incomplete Network Embedding 
-
 ============================================
 
 ![GitHub stars](https://img.shields.io/github/stars/benedekrozemberczki/SINE.svg?style=plastic) ![GitHub forks](https://img.shields.io/github/forks/benedekrozemberczki/SINE.svg?color=blue&style=plastic) ![License](https://img.shields.io/github/license/benedekrozemberczki/SINE.svg?color=blue&style=plastic) [![Arxiv](https://img.shields.io/badge/ArXiv-1904.05003-orange.svg?color=blue&style=plastic)](https://arxiv.org/pdf/1904.05003.pdf)
