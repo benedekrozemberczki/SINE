@@ -17,6 +17,9 @@ This repository provides an implementation of SINE as described in the paper:
 > ICDM, 2018.
 > [[Paper]](https://arxiv.org/pdf/1810.06768.pdf)
 
+
+The SINE model is available in [[Karate Club]](https://github.com/benedekrozemberczki/karateclub) framework.
+
 The original C implementation is available [[here]](https://github.com/daokunzhang/SINE).
 
 ### Requirements
