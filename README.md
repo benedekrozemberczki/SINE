@@ -1,7 +1,8 @@
 Scalable Incomplete Network Embedding 
 ============================================
 
-![License](https://img.shields.io/github/license/benedekrozemberczki/SINE.svg?color=blue&style=plastic) [![Arxiv](https://img.shields.io/badge/ArXiv-1904.05003-orange.svg?color=blue&style=plastic)](https://arxiv.org/pdf/1904.05003.pdf) [![codebeat badge](https://codebeat.co/badges/c01c7c97-d873-4ba6-ac5c-21147aae5f74)](https://codebeat.co/projects/github-com-benedekrozemberczki-sine-master)
+![License](https://img.shields.io/github/license/benedekrozemberczki/SINE.svg?color=blue&style=plastic) [![Arxiv](https://img.shields.io/badge/ArXiv-1904.05003-orange.svg?color=blue&style=plastic)](https://arxiv.org/pdf/1904.05003.pdf) [![codebeat badge](https://codebeat.co/badges/c01c7c97-d873-4ba6-ac5c-21147aae5f74)](https://codebeat.co/projects/github-com-benedekrozemberczki-sine-master) [![repo size](https://img.shields.io/github/repo-size/benedekrozemberczki/SINE.svg)](https://github.com/benedekrozemberczki/SINE/archive/master.zip)
+
 
 A PyTorch  implementation of **Scalable Incomplete Network Embedding (ICDM 2018)**.
 
