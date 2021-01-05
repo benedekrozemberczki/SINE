@@ -101,3 +101,8 @@ Creating an embedding of an other dense structured dataset the `Twitch Brasilian
 ```
 python src/main.py --edge-path input/ptbr_edges.csv --feature-path input/ptbr_features.json --output-path output/ptbr_sine.csv
 ```
+--------------------------------------------------------------------------------
+
+**License**
+
+- [GNU](https://github.com/benedekrozemberczki/SINE/blob/master/LICENSE)
