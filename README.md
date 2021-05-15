@@ -106,3 +106,5 @@ python src/main.py --edge-path input/ptbr_edges.csv --feature-path input/ptbr_fe
 **License**
 
 - [GNU](https://github.com/benedekrozemberczki/SINE/blob/master/LICENSE)
+
+--------------------------------------------------------------------------------
