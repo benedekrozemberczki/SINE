@@ -8,7 +8,7 @@ A **PyTorch**  implementation of **Scalable Incomplete Network Embedding (ICDM 2
 
 <div style="text-align:center"><img src ="sine.jpg" ,width=720/></div>
 
------------------------------------
+--------------------------------
 	
 ### Abstract
 <p align="justify">
